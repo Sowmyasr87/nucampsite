@@ -1,21 +1,44 @@
-import React from 'react';
-import { Container, Navbar, NavbarBrand } from 'reactstrap';
-import NucampLogo from './app/assets/img/logo.png';
-import logo from './logo.svg';
-
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import CampsitesDirectoryPage from './pages/CampsitesDirectoryPage';
+//import logo from './logo.svg';
+import Header from './components/Header';
+import { Routes, Route } from 'react-router-dom';
+import ContactPage from './pages/ContactPage';
+import HomePage from './pages/HomePage';
+import Footer from './components/Footer';
+import CampsiteDetailPage from './pages/CampsiteDetailPage';
+import AboutPage from './pages/AboutPage';
+import { fetchCampsites } from './features/campsites/campsitesSlice';
+import { fetchPartners } from './features/partners/partnersSlice';
+import { fetchPromotions } from './features/promotions/promotionsSlice';
+import { fetchComments } from './features/comments/commentsSlice';
 import './App.css';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCampsites());
+    dispatch(fetchPartners());
+    dispatch(fetchPromotions());
+    dispatch(fetchComments());
+}, [dispatch]);
+
   return (
     <div className="App">
-        <Navbar dark color = 'primary' sticky='top' expand='md'>
-          <Container>
-            <NavbarBrand href='/'>
-              <img src={NucampLogo} alt='nucamp logo'/>
-            </NavbarBrand>
-          </Container>
-        </Navbar>
-        I'm ready for workshop!
+      <Header />
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='contact' element={<ContactPage />} />
+        <Route path='directory' element={<CampsitesDirectoryPage />} />
+        <Route
+          path='directory/:campsiteId'
+          element={<CampsiteDetailPage />}
+        />
+        <Route path='about' element={<AboutPage/>}/>
+      </Routes>
+      <Footer />
     </div>
   );
 }
